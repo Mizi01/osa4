@@ -1,5 +1,8 @@
 const dummy = (blogs) => {
-  return 1
+  const something = blogs.length
+  return something === 0
+    ? 1
+    : 1
 }
 
 const totalLikes = (blogs) => {
