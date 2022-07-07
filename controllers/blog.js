@@ -3,7 +3,9 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 
 blogsRouter.get('/', async (request, response) => {
-  const blogs = await Blog.find({})
+  const blogs = await Blog
+    .find({})
+    .populate('user', { username: 1, name: 1 })
   response.json(blogs)
 })
 
@@ -22,18 +24,22 @@ blogsRouter.get('/:id', (request, response, next) => {
 blogsRouter.post('/', async (request, response, next) => {
   const body = request.body
 
-  const user = await User.findById(body.userId)
+  const user = await User.find({})
 
   const blog = new Blog({
     author: body.author,
     title: body.title,
     url: body.url,
     likes: body.likes,
-    user: user._id
+    user: user[0]._id
   })
   try {
     const savedBlog = await blog.save()
-    /*user.blogs = user.blogs.concat(savedBlog._id)*/
+    console.log(`user on ennen blogilistan päivittämistä: ${user[0]}`)
+    console.log(`userin blogilista ennen päivittämistä: ${user[0].blogs}`)
+    user[0].blogs = user[0].blogs.concat(savedBlog._id)
+    await user[0].save()
+    console.log(`userin blogilista päivittämisen jälkeen: ${user[0].blogs}`)
     response.status(201).json(savedBlog)
   } catch(exeption) {
     next(exeption)

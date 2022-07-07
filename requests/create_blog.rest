@@ -1,4 +1,4 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
 
-{"author": "Jaska", "title":"joo", "url": "www.www.ww", "likes": 5}
+{"author": "Kaja", "title":"kajan blogi", "url": "www.kaja.se", "likes": 7}
