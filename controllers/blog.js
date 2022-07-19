@@ -43,7 +43,7 @@ blogsRouter.post('/', async (request, response, next) => {
     author: body.author,
     title: body.title,
     url: body.url,
-    likes: body.likes,
+    likes: body.likes || 0,
     user: user._id
   })
   try {
@@ -68,12 +68,15 @@ blogsRouter.delete('/:id', async (request, response, next) => {
   }
 })
 
-/*blogsRouter.put('/:id', (request, response, next) => {
+blogsRouter.put('/:id', (request, response, next) => {
   const body = request.body
 
-  const note = {
-    content: body.content,
-    important: body.important,
+  const blog = {
+    author: body.author,
+    title: body.title,
+    url: body.url,
+    user: body.user,
+    likes: body.likes
   }
 
   Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
@@ -81,6 +84,6 @@ blogsRouter.delete('/:id', async (request, response, next) => {
       response.json(updatedNote)
     })
     .catch(error => next(error))
-})*/
+})
 
 module.exports = blogsRouter

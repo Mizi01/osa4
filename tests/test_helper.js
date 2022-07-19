@@ -17,6 +17,46 @@ const initialBlogs = [
     url: 'youtu.be',
     likes: 10,
     __v: 0
+  },
+  {
+    id: '5a422aa71b5fa4356234d17f8',
+    title: 'All the time same',
+    author: 'Richard himself',
+    url: 'youtu.be',
+    likes: 101,
+    __v: 0
+  },
+  {
+    id: '5a422aa71b5fa4356234dd17f8',
+    title: 'You tube',
+    author: 'Richard himself',
+    url: 'youtu.be',
+    likes: 15,
+    __v: 0
+  },
+  {
+    id: '5a422aa71rfa4356234d17f8',
+    title: 'Ae',
+    author: 'Richard himself',
+    url: 'youtu.be',
+    likes: 435,
+    __v: 0
+  },
+  {
+    id: '5a422aa71b5hg4356234d17f8',
+    title: 'dsfgdfs',
+    author: 'Richard himself',
+    url: 'youtu.be',
+    likes: 134,
+    __v: 0
+  },
+  {
+    id: '5a422aa7134a676234d17f8',
+    title: 'Go To Sarmful',
+    author: 'Edsger kuka',
+    url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    likes: 10,
+    __v: 0
   }
 ]
 

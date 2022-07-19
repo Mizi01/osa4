@@ -15,7 +15,34 @@ const totalLikes = (blogs) => {
     : blogsLikes.reduce(reducer, 0)
 }
 
+const favoriteBlog = (blogs) => {
+  const favorite = blogs.lenght === 1
+    ? blogs
+    : blogs.sort((a, b) => b.likes - a.likes)[0]
+  console.log(favorite)
+  return blogs.length === 0
+    ? []
+    : favorite
+}
+
+const mostBlogs = (blogs) => {
+  if(blogs.lenght === 0) return []
+  if(blogs.lenght === 1) return [blogs.author, 1]
+  const authors = []
+  let blogsS = []
+  blogs.map(blog => blog.author).forEach(author => authors.includes(author)? blogsS[authors.findIndex(aut => aut === author)] += 1 : (
+    authors.push(author),
+    blogsS = blogsS.concat(1)
+  ))
+  const max = Math.max(...blogsS)
+  const findId = blogsS.findIndex(n => n === max)
+  console.log([authors[findId], blogsS[findId]])
+  return [authors[findId], blogsS[findId]]
+}
+
 module.exports = {
   dummy,
   totalLikes,
+  favoriteBlog,
+  mostBlogs
 }
