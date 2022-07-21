@@ -92,6 +92,14 @@ describe('addition of a new blog', () => {
     console.log(blogsAtDb)
     expect(addedBlog.likes).toBe(0)
   })
+
+  test('invalid blog is not added', async () => {
+    await api
+      .post('/api/blogs')
+      .set({ Authorization: token })
+      .send(helper.blogWithoutTitle)
+      .expect(400)
+  })
 })
 
 describe('deletion of a blog', () => {

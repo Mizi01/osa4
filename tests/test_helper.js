@@ -60,19 +60,21 @@ const initialBlogs = [
   }
 ]
 
-const newBlog = new Blog ({
-  id: 'mo3090faj3098usfa0',
+const newBlog = {
   title: 'Tämä on uusi blogi',
   author: 'Uusi Blokkaaja',
   url: 'uusi.blokkaaja.fi',
   likes: 1,
-  __v: 0
-})
+}
 
 const blogWithoutLikes = {
   title: 'Blogi jossa ei ole likejä',
   author: 'Liketön Blokkaaja',
   url: 'ei.likejä.fi',
+}
+
+const blogWithoutTitle = {
+  author: 'Liketön Blokkaaja',
 }
 
 const blogsInDb = async () => {
@@ -86,5 +88,5 @@ const usersInDb = async () => {
 }
 
 module.exports = {
-  initialBlogs, newBlog, blogsInDb, usersInDb, blogWithoutLikes
+  initialBlogs, newBlog, blogsInDb, usersInDb, blogWithoutLikes, blogWithoutTitle
 }

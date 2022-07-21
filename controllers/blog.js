@@ -46,13 +46,21 @@ blogsRouter.post('/', async (request, response, next) => {
     likes: body.likes || 0,
     user: user._id
   })
+
+  console.log(body.title)
+  if(!blog.title || !body.url ) {
+    console.log(`tämän pitäisi olla undefined: ${blog.title}`)
+    return response.status(400).json({ error: 'title or url missing' }).end()
+  }
+
+  //console.log(blog)
   try {
     const savedBlog = await blog.save()
-    console.log(`user on ennen blogilistan päivittämistä: ${user}`)
-    console.log(`userin blogilista ennen päivittämistä: ${user.blogs}`)
+    //console.log(`user on ennen blogilistan päivittämistä: ${user}`)
+    //console.log(`userin blogilista ennen päivittämistä: ${user.blogs}`)
     user.blogs = user.blogs.concat(savedBlog._id)
     await user.save()
-    console.log(`userin blogilista päivittämisen jälkeen: ${user.blogs}`)
+    //console.log(`userin blogilista päivittämisen jälkeen: ${user.blogs}`)
     response.status(201).json(savedBlog)
   } catch(exeption) {
     next(exeption)
