@@ -120,6 +120,28 @@ describe('deletion of a blog', () => {
   })
 })
 
+describe('blog can bee updated', () => {
+  test('', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+    const blog = {
+      ...blogToUpdate,
+      likes: blogToUpdate.likes + 1
+    }
+    console.log(blogToUpdate.likes, blog.likes)
+
+    await api
+      .put(`/api/blogs/${blog.id}`)
+      .set({ Authorization: token })
+      .send(blog)
+      .expect(200)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    const updatedBlog = blogsAtEnd.find(blog => blog.id === blog.id)
+    expect(updatedBlog.likes).toBe(blogToUpdate.likes + 1)
+  })
+})
+
 describe('when there is initially one user at db', () => {
   beforeEach(async () => {
     await User.deleteMany({})
