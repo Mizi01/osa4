@@ -78,6 +78,20 @@ describe('addition of a new blog', () => {
     const blogsAtEnd = await helper.blogsInDb()
     expect(blogsAtEnd).toHaveLength(3)
   })
+
+  test('new blog has zero likes', async () => {
+    await api
+      .post('/api/blogs')
+      .set({ Authorization: token })
+      .send(helper.blogWithoutLikes)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtDb = await helper.blogsInDb()
+    const addedBlog = blogsAtDb.find(blog => blog.title === helper.blogWithoutLikes.title)
+    console.log(blogsAtDb)
+    expect(addedBlog.likes).toBe(0)
+  })
 })
 
 describe('deletion of a blog', () => {

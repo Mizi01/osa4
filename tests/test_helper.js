@@ -69,6 +69,12 @@ const newBlog = new Blog ({
   __v: 0
 })
 
+const blogWithoutLikes = {
+  title: 'Blogi jossa ei ole likejä',
+  author: 'Liketön Blokkaaja',
+  url: 'ei.likejä.fi',
+}
+
 const blogsInDb = async () => {
   const blogs = await Blog.find({})
   return blogs.map(blog => blog.toJSON())
@@ -80,5 +86,5 @@ const usersInDb = async () => {
 }
 
 module.exports = {
-  initialBlogs, newBlog, blogsInDb, usersInDb
+  initialBlogs, newBlog, blogsInDb, usersInDb, blogWithoutLikes
 }
