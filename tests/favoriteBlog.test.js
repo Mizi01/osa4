@@ -3,8 +3,7 @@ const blogList = require('./test_helper').initialBlogs
 
 
 describe('favorite blog', () => {
-  const oneBlog = blogList[1]
-  console.log(oneBlog)
+  const oneBlog = blogList[4]
   test('of empty list is zero', () => {
     const result = favoriteBlog([])
     expect(result).toEqual([])
@@ -16,7 +15,6 @@ describe('favorite blog', () => {
   })
   test('of a bigger list returns right blog', () => {
     const result = favoriteBlog(blogList)
-    console.log(blogList[0], oneBlog)
     expect(result).toEqual(oneBlog)
   })
 })

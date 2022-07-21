@@ -2,8 +2,6 @@ const mostBlogs = require('../utils/list_helper').mostBlogs
 const blogList = require('./test_helper').initialBlogs
 
 describe('most blogs', () => {
-  const oneBlog = blogList[1]
-  console.log(oneBlog)
   test('of empty list is zero', () => {
     const result = mostBlogs([])
     expect(result).toEqual([])

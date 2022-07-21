@@ -19,7 +19,6 @@ const favoriteBlog = (blogs) => {
   const favorite = blogs.lenght === 1
     ? blogs
     : blogs.sort((a, b) => b.likes - a.likes)[0]
-  console.log(favorite)
   return blogs.length === 0
     ? []
     : favorite
@@ -36,7 +35,6 @@ const mostBlogs = (blogs) => {
   ))
   const max = Math.max(...blogsS)
   const findId = blogsS.findIndex(n => n === max)
-  console.log([authors[findId], blogsS[findId]])
   return [authors[findId], blogsS[findId]]
 }
 

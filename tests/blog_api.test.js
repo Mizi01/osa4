@@ -9,16 +9,38 @@ const helper = require('./test_helper')
 const User = require('../models/user')
 const Blog = require('../models/blog')
 
+let token = null
+
 beforeEach(async () => {
+  await User.deleteMany({})
+  const passwordHash = await bcrypt.hash('salasana', 10)
+  const user = new User({
+    username: 'testi',
+    name: 'Testi Testaaja',
+    passwordHash
+  })
+  user.save()
+  const response = await api
+    .post('/api/login')
+    .send({
+      username: 'testi',
+      password: 'salasana'
+    })
+  token = `bearer ${response.body.token}`
   await Blog.deleteMany({})
-  let blogObject = new Blog(helper.initialBlogs[0])
-  await blogObject.save()
-  blogObject = new Blog(helper.initialBlogs[1])
-  await blogObject.save()
+  await api
+    .post('/api/blogs')
+    .set('Authorization', token)
+    .send(helper.initialBlogs[0])
+  await api
+    .post('/api/blogs')
+    .set('Authorization', token)
+    .send(helper.initialBlogs[1])
 })
 
 describe('addition of a new blog', () => {
   test('blogs are returned as json', async () => {
+    jest.setTimeout(10000)
     await api
       .get('/api/blogs')
       .expect(200)
@@ -28,7 +50,14 @@ describe('addition of a new blog', () => {
   test('all blogs has returned', async () => {
     const response = await api.get('/api/blogs')
 
-    expect(response.body).toHaveLength(helper.initialBlogs.length)
+    expect(response.body).toHaveLength(2)
+  })
+
+  test('blog have id instead of _id', async () => {
+    const response = await api.get('/api/blogs')
+    console.log(response.body[0])
+    expect(response.body[0].id).toBeDefined()
+    expect(response.body[0]._id).not.toBeDefined()
   })
 
   test('a specific blog is within the returned blogs', async () => {
@@ -41,12 +70,13 @@ describe('addition of a new blog', () => {
   test('blog has been added', async () => {
     await api
       .post('/api/blogs')
+      .set({ Authorization: token })
       .send(helper.newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
     const blogsAtEnd = await helper.blogsInDb()
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+    expect(blogsAtEnd).toHaveLength(3)
   })
 })
 
@@ -61,7 +91,7 @@ describe('deletion of a blog', () => {
 
     const blogsAtEnd = await helper.blogsInDb()
 
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
+    expect(blogsAtEnd).toHaveLength(2 - 1)
 
     const author = blogsAtEnd.map(r => r.author)
     expect(author).not.toContain(blogToDelete.author)
