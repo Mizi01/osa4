@@ -70,7 +70,7 @@ describe('addition of a new blog', () => {
   test('blog has been added', async () => {
     await api
       .post('/api/blogs')
-      .set({ Authorization: token })
+      .set('Authorization', token)
       .send(helper.newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -82,7 +82,7 @@ describe('addition of a new blog', () => {
   test('new blog has zero likes', async () => {
     await api
       .post('/api/blogs')
-      .set({ Authorization: token })
+      .set('Authorization', token )
       .send(helper.blogWithoutLikes)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -96,7 +96,7 @@ describe('addition of a new blog', () => {
   test('invalid blog is not added', async () => {
     await api
       .post('/api/blogs')
-      .set({ Authorization: token })
+      .set('Authorization', token )
       .send(helper.blogWithoutTitle)
       .expect(400)
   })
@@ -109,6 +109,7 @@ describe('deletion of a blog', () => {
 
     await api
       .delete(`/api/blogs/${blogToDelete}`)
+      .set('Authorization', token )
       .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
@@ -117,6 +118,17 @@ describe('deletion of a blog', () => {
 
     const author = blogsAtEnd.map(r => r.author)
     expect(author).not.toContain(blogToDelete.author)
+  })
+
+  test('fails with status code 401 if token is invalid', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[0].id
+    await User.deleteMany({})
+
+    await api
+      .delete(`/api/blogs/${blogToDelete}`)
+      .set('Authorization', token )
+      .expect(401)
   })
 })
 
@@ -132,7 +144,7 @@ describe('blog can bee updated', () => {
 
     await api
       .put(`/api/blogs/${blog.id}`)
-      .set({ Authorization: token })
+      .set('Authorization', token)
       .send(blog)
       .expect(200)
 
