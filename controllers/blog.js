@@ -1,7 +1,5 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
-const jwt = require('jsonwebtoken')
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog
@@ -22,22 +20,13 @@ blogsRouter.get('/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-/*const getTokenFrom = request => {
-  const authorization = request.get('authorization')
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    return authorization.substring(7)
-  }
-  return null
-}*/
 
 blogsRouter.post('/', async (request, response, next) => {
   const body = request.body
-  //const token = getTokenFrom(request)
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  if (!request.token || !decodedToken.id) {
+  const user = request.user
+  if (!user) {
     return response.status(401).json({ error: 'token missing or invalid' })
   }
-  const user = await User.findById(decodedToken.id)
 
   const blog = new Blog({
     author: body.author,
@@ -47,20 +36,17 @@ blogsRouter.post('/', async (request, response, next) => {
     user: user._id
   })
 
-  console.log(body.title)
+
   if(!blog.title || !body.url ) {
     console.log(`tämän pitäisi olla undefined: ${blog.title}`)
     return response.status(400).json({ error: 'title or url missing' }).end()
   }
 
-  //console.log(blog)
+
   try {
     const savedBlog = await blog.save()
-    //console.log(`user on ennen blogilistan päivittämistä: ${user}`)
-    //console.log(`userin blogilista ennen päivittämistä: ${user.blogs}`)
     user.blogs = user.blogs.concat(savedBlog._id)
     await user.save()
-    //console.log(`userin blogilista päivittämisen jälkeen: ${user.blogs}`)
     response.status(201).json(savedBlog)
   } catch(exeption) {
     next(exeption)
@@ -68,8 +54,8 @@ blogsRouter.post('/', async (request, response, next) => {
 })
 
 blogsRouter.delete('/:id', async (request, response, next) => {
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  const user = await User.findById(decodedToken.id)
+
+  const user = request.user
   const id = request.params.id
   const blog = await Blog.findById(id)
   console.log(blog.user, user)

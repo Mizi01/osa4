@@ -12,6 +12,7 @@ const Blog = require('../models/blog')
 let token = null
 
 beforeEach(async () => {
+  jest.setTimeout(10000)
   await User.deleteMany({})
   const passwordHash = await bcrypt.hash('salasana', 10)
   const user = new User({
@@ -30,11 +31,11 @@ beforeEach(async () => {
   await Blog.deleteMany({})
   await api
     .post('/api/blogs')
-    .set('Authorization', token)
+    .set({ Authorization: token })
     .send(helper.initialBlogs[0])
   await api
     .post('/api/blogs')
-    .set('Authorization', token)
+    .set({ Authorization: token })
     .send(helper.initialBlogs[1])
 })
 
@@ -94,6 +95,7 @@ describe('addition of a new blog', () => {
   })
 
   test('invalid blog is not added', async () => {
+
     await api
       .post('/api/blogs')
       .set('Authorization', token )
